@@ -44,7 +44,8 @@ const privileges: Privilege[] = [
     gradient: 'gradient-purple-blue',
     features: [
       'Префикс [PREMIUM]',
-      'Команда /fly',
+      'Команды /god /heal',
+      'Команды /near /feed',
       '3 дома на сервере',
       'Приоритет в очереди'
     ]
