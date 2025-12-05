@@ -384,7 +384,7 @@ export default function Index() {
             <div>
               <h4 className="font-bold mb-3">IP сервера</h4>
               <div className="px-4 py-2 rounded-lg bg-card border border-border font-mono text-sm">
-                play.endpvpcraft.ru
+                EndpvpCraft.aternos.me:49669
               </div>
             </div>
           </div>
