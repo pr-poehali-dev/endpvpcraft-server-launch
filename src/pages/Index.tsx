@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -96,7 +96,32 @@ export default function Index() {
   const [selectedTab, setSelectedTab] = useState('shop');
   const [purchases] = useState<Purchase[]>(mockPurchases);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [serverOnline, setServerOnline] = useState<number | null>(null);
+  const [serverStatus, setServerStatus] = useState<'loading' | 'online' | 'offline'>('loading');
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchServerStatus = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/0a33920a-f308-433b-85dd-967802e7c2a3');
+        const data = await response.json();
+        
+        if (data.status === 'online') {
+          setServerOnline(data.online);
+          setServerStatus('online');
+        } else {
+          setServerStatus('offline');
+        }
+      } catch (error) {
+        setServerStatus('offline');
+      }
+    };
+
+    fetchServerStatus();
+    const interval = setInterval(fetchServerStatus, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleBuy = async (privilege: Privilege) => {
     setIsProcessing(true);
@@ -152,8 +177,22 @@ export default function Index() {
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg bg-card">
-                <Icon name="Users" size={18} className="text-primary" />
-                <span className="text-sm">Онлайн: <span className="font-semibold text-primary">248</span></span>
+                {serverStatus === 'loading' ? (
+                  <>
+                    <Icon name="Loader2" size={18} className="text-muted-foreground animate-spin" />
+                    <span className="text-sm text-muted-foreground">Загрузка...</span>
+                  </>
+                ) : serverStatus === 'online' ? (
+                  <>
+                    <Icon name="Users" size={18} className="text-primary" />
+                    <span className="text-sm">Онлайн: <span className="font-semibold text-primary">{serverOnline}</span></span>
+                  </>
+                ) : (
+                  <>
+                    <Icon name="ServerOff" size={18} className="text-destructive" />
+                    <span className="text-sm text-muted-foreground">Оффлайн</span>
+                  </>
+                )}
               </div>
               <Button variant="outline" className="gap-2">
                 <Icon name="User" size={18} />
