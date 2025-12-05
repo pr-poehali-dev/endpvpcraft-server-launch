@@ -26,51 +26,174 @@ interface Purchase {
 
 const privileges: Privilege[] = [
   {
-    id: 'vip',
-    name: 'VIP',
-    price: 299,
+    id: 'fly',
+    name: 'FLY',
+    price: 19,
     duration: '30 дней',
-    gradient: 'gradient-purple-blue',
+    gradient: 'gradient-blue-cyan',
     features: [
-      'Уникальный префикс [VIP]',
-      'Доступ к VIP зоне',
-      '3 дома на сервере',
-      'Приоритет в очереди',
-      '/fly на 1 час в день'
+      'Команда /fly',
+      'Полёты без ограничений'
     ]
   },
   {
     id: 'premium',
     name: 'PREMIUM',
-    price: 599,
+    price: 29,
+    duration: '30 дней',
+    gradient: 'gradient-purple-blue',
+    features: [
+      'Префикс [PREMIUM]',
+      'Команда /fly',
+      '3 дома на сервере',
+      'Приоритет в очереди'
+    ]
+  },
+  {
+    id: 'creative',
+    name: 'КРЕАТИВ',
+    price: 49,
+    duration: '30 дней',
+    gradient: 'gradient-purple-pink',
+    features: [
+      'Префикс [КРЕАТИВ]',
+      'Режим креатива',
+      'Команды /fly, /gamemode',
+      '5 домов на сервере'
+    ]
+  },
+  {
+    id: 'admin',
+    name: 'АДМИН',
+    price: 99,
+    duration: '30 дней',
+    gradient: 'gradient-purple-blue',
+    features: [
+      'Префикс [АДМИН]',
+      'Админ команды',
+      '/fly, /god, /heal',
+      '10 домов на сервере',
+      'Кик игроков'
+    ]
+  },
+  {
+    id: 'vip',
+    name: 'VIP',
+    price: 199,
     duration: '30 дней',
     gradient: 'gradient-purple-pink',
     popular: true,
     features: [
-      'Уникальный префикс [PREMIUM]',
-      'Доступ к PREMIUM зоне',
-      '5 домов на сервере',
+      'Префикс [VIP]',
+      'Все команды АДМИНА',
+      '15 домов на сервере',
       'Приоритетный вход',
-      '/fly без ограничений',
-      'Набор редких ресурсов',
       'Уникальная броня'
     ]
   },
   {
-    id: 'ultimate',
-    name: 'ULTIMATE',
-    price: 999,
+    id: 'founder',
+    name: 'ОСНОВАТЕЛЬ',
+    price: 299,
     duration: '30 дней',
     gradient: 'gradient-blue-cyan',
     features: [
-      'Эксклюзивный префикс [ULTIMATE]',
-      'Доступ ко всем зонам',
-      '10 домов на сервере',
-      'Моментальный вход',
-      '/fly, /god, /heal',
+      'Префикс [ОСНОВАТЕЛЬ]',
+      'Все VIP возможности',
+      '20 домов на сервере',
       'Набор легендарных предметов',
+      'Личный приват 300x300'
+    ]
+  },
+  {
+    id: 'owner',
+    name: 'OWNER',
+    price: 499,
+    duration: '30 дней',
+    gradient: 'gradient-purple-blue',
+    features: [
+      'Префикс [OWNER]',
+      'Все права на сервере',
+      '30 домов',
+      'Бан/разбан игроков',
       'Эксклюзивное оружие',
-      'Личный приват 500x500'
+      'Приват 500x500'
+    ]
+  },
+  {
+    id: 'king',
+    name: 'КОРОЛЬ',
+    price: 799,
+    duration: '30 дней',
+    gradient: 'gradient-purple-pink',
+    features: [
+      'Префикс [КОРОЛЬ]',
+      'Полные права OWNER',
+      '50 домов',
+      'Королевская корона',
+      'Легендарный набор',
+      'Приват 700x700'
+    ]
+  },
+  {
+    id: 'frontman',
+    name: 'ФРОНТМЕН',
+    price: 999,
+    duration: '30 дней',
+    gradient: 'gradient-blue-cyan',
+    popular: true,
+    features: [
+      'Префикс [ФРОНТМЕН]',
+      'Максимальные права',
+      '75 домов',
+      'Уникальная маска',
+      'Эпический набор',
+      'Приват 1000x1000'
+    ]
+  },
+  {
+    id: 'overlord',
+    name: 'ПОВЕЛИТЕЛЬ',
+    price: 1499,
+    duration: '30 дней',
+    gradient: 'gradient-purple-pink',
+    features: [
+      'Префикс [ПОВЕЛИТЕЛЬ]',
+      'Абсолютная власть',
+      '100 домов',
+      'Мифический набор',
+      'Особое оружие',
+      'Приват 1500x1500'
+    ]
+  },
+  {
+    id: 'emperor',
+    name: 'ИМПЕРАТОР',
+    price: 1999,
+    duration: '30 дней',
+    gradient: 'gradient-blue-cyan',
+    features: [
+      'Префикс [ИМПЕРАТОР]',
+      'Императорская власть',
+      '150 домов',
+      'Божественный набор',
+      'Имперская корона',
+      'Приват 2000x2000'
+    ]
+  },
+  {
+    id: 'ruler',
+    name: 'ПРАВИТЕЛЬ',
+    price: 2500,
+    duration: '30 дней',
+    gradient: 'gradient-purple-pink',
+    features: [
+      'Префикс [ПРАВИТЕЛЬ]',
+      'Абсолютный контроль',
+      'Безлимит домов',
+      'Легендарный трон',
+      'Все возможности сервера',
+      'Бесконечный приват'
     ]
   }
 ];
@@ -246,7 +369,7 @@ export default function Index() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-[1600px] mx-auto">
               {privileges.map((privilege) => (
                 <Card 
                   key={privilege.id} 
