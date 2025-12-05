@@ -97,6 +97,8 @@ export default function Index() {
   const [purchases] = useState<Purchase[]>(mockPurchases);
   const [isProcessing, setIsProcessing] = useState(false);
   const [serverOnline, setServerOnline] = useState<number | null>(null);
+  const [previousOnline, setPreviousOnline] = useState<number | null>(null);
+  const [onlineDiff, setOnlineDiff] = useState<number>(0);
   const [serverStatus, setServerStatus] = useState<'loading' | 'online' | 'offline'>('loading');
   const { toast } = useToast();
 
@@ -107,7 +109,14 @@ export default function Index() {
         const data = await response.json();
         
         if (data.status === 'online') {
-          setServerOnline(data.online);
+          const newOnline = data.online;
+          
+          if (serverOnline !== null) {
+            setPreviousOnline(serverOnline);
+            setOnlineDiff(newOnline - serverOnline);
+          }
+          
+          setServerOnline(newOnline);
           setServerStatus('online');
         } else {
           setServerStatus('offline');
@@ -121,7 +130,7 @@ export default function Index() {
     const interval = setInterval(fetchServerStatus, 60000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [serverOnline]);
 
   const handleBuy = async (privilege: Privilege) => {
     setIsProcessing(true);
@@ -186,6 +195,17 @@ export default function Index() {
                   <>
                     <Icon name="Users" size={18} className="text-primary" />
                     <span className="text-sm">Онлайн: <span className="font-semibold text-primary">{serverOnline}</span></span>
+                    {previousOnline !== null && onlineDiff !== 0 && (
+                      <span className={`text-xs flex items-center gap-0.5 ${
+                        onlineDiff > 0 ? 'text-green-500' : 'text-red-500'
+                      }`}>
+                        <Icon 
+                          name={onlineDiff > 0 ? 'TrendingUp' : 'TrendingDown'} 
+                          size={14} 
+                        />
+                        {Math.abs(onlineDiff)}
+                      </span>
+                    )}
                   </>
                 ) : (
                   <>
