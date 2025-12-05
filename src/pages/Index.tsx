@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -94,9 +95,45 @@ const mockPurchases: Purchase[] = [
 export default function Index() {
   const [selectedTab, setSelectedTab] = useState('shop');
   const [purchases] = useState<Purchase[]>(mockPurchases);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { toast } = useToast();
 
-  const handleBuy = (privilege: Privilege) => {
-    alert(`Покупка ${privilege.name} за ${privilege.price}₽ будет доступна после подключения платежной системы`);
+  const handleBuy = async (privilege: Privilege) => {
+    setIsProcessing(true);
+    
+    try {
+      const response = await fetch('https://functions.poehali.dev/a034dee0-c166-4ba7-92d6-8f080d29cfd3', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          privilegeName: privilege.name,
+          price: privilege.price,
+          email: 'user@example.com'
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.confirmationUrl) {
+        window.location.href = data.confirmationUrl;
+      } else {
+        toast({
+          title: 'Ошибка оплаты',
+          description: data.error || 'Не удалось создать платёж. Попробуйте позже.',
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось связаться с сервером оплаты',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -193,9 +230,19 @@ export default function Index() {
                       className={`w-full ${privilege.gradient} text-white border-0 hover:opacity-90 transition-opacity`}
                       size="lg"
                       onClick={() => handleBuy(privilege)}
+                      disabled={isProcessing}
                     >
-                      <Icon name="ShoppingCart" size={18} className="mr-2" />
-                      Купить
+                      {isProcessing ? (
+                        <>
+                          <Icon name="Loader2" size={18} className="mr-2 animate-spin" />
+                          Обработка...
+                        </>
+                      ) : (
+                        <>
+                          <Icon name="ShoppingCart" size={18} className="mr-2" />
+                          Купить
+                        </>
+                      )}
                     </Button>
                   </CardFooter>
                 </Card>
